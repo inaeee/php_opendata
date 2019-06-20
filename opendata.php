@@ -1,0 +1,138 @@
+<html>
+<head>
+<title>OPENDATA</title>
+</head>
+
+<body>
+<center>
+<h1>OPENDATA</h1>
+<p>
+<form action="opendata.php" method="post">
+<h3>ROUTE:
+<select name="route[]">
+<option value="0">ROUTE</option>
+<option value="1호선">1호선</option>
+<option value="2호선">2호선</option>
+<option value="3호선">3호선</option>
+<option value="4호선">4호선</option>
+<option value="5호선">5호선</option>
+<option value="6호선">6호선</option>
+<option value="7호선">7호선</option>
+<option value="8호선">8호선</option>
+<option value="9호선">9호선</option>
+<option value="9호선2~3단계">9호선2~3단계</option>
+<option value="경부선">경부선</option>
+<option value="경원선">경원선</option>
+<option value="분당선">분당선</option>
+<option value="중앙선">중앙선</option>
+<option value="경의선">경의선</option>
+<option value="경춘선">경춘선</option>
+<option value="장항선">장항선</option>
+<option value="과천선">과천선</option>
+<option value="경강선">경강선</option>
+<option value="안산선">안산선</option>
+<option value="경인선">경인선</option>
+<option value="수인선">수인선</option>
+<option value="일산선">일산선</option>
+<option value="우이신설선">우이신설선</option>
+<option value="공항철도 1호선">공항철도 1호선</option>
+</select></h3>
+<h3>STNAME: 
+<input type=text name=text value=""></input>
+<input type=submit name=search value=SEARCH></input>
+</h3>
+</p>
+</form>
+
+
+<?php
+	$id="hwangia1786";
+	$pw="mshwangia1786M";
+	$dbname="hwangia1786";
+	$link=mysql_connect("localhost",$id,$pw);	
+	if(!$link){
+		echo "MySQL DB : <br>\n";
+		echo "errno = ".mysql_errno().", <br>\n";
+		echo "error = ".mysql_error().", <br>\n";
+		echo "link = $link<br>\n";
+		exit;
+	}
+
+	mysql_select_db($dbname,$link);
+	$q="select * from subway";
+	$res=mysql_query($q,$link);
+
+
+
+
+	$route=$_POST['route'];
+	$stname=$_POST['text'];
+	$query="select * from subway where route='$route[0]' and stname like '%$stname%'";
+	$res2=mysql_query($query,$link);
+
+	echo "SEARCH RESULT<br>";
+	echo "<table border=1>";
+	echo "<tr bgcolor='pink'>";
+	echo "<th><b>udate</b></th><th/><b>route</b></th><th/><b>stid</b></th><th/><b>stname</b></th><th/><b>ptnum</b></th><th/><b>pdnum</b></th><th/><b/>regd</b></th>";
+	echo "</tr>";
+	while($row2=mysql_fetch_row($res2)){
+		echo "<tr>";
+		print("<td>".$row2[0]."</td>");
+		print("<td>".$row2[1]."</td>");
+		print("<td>".$row2[2]."</td>");
+		print("<td>".$row2[3]."</td>");
+		print("<td>".$row2[4]."</td>");
+		print("<td>".$row2[5]."</td>");
+		print("<td>".$row2[6]."</td>");
+		echo "</tr>";
+	}
+	echo "</table>";
+
+
+
+
+
+	$REMOTE_ADDR=$_SERVER[REMOTE_ADDR];
+	$query2="insert into ipuse values('$REMOTE_ADDR','$route[0]','$stname')";
+	mysql_query($query2,$link);
+	$query3="select * from ipuse";
+	$res3=mysql_query($query3,$link);
+	
+	echo "<p>IP AND SEARCH DATA<br>";
+	echo "<table border=1>";
+	echo "<tr bgcolor='yellow'>";
+	echo "<th><b>ip</b></th><th><b>route</b></th><th><b>stname</b></th>";
+	echo "</tr>";
+	while($row3=mysql_fetch_row($res3)){
+		echo "<tr>";
+		print("<td>".$row3[0]."</td>");
+		print("<td>".$row3[1]."</td>");
+		print("<td>".$row3[2]."</td>");
+		echo "</tr>";
+	}
+	echo "</table>";
+
+
+
+
+	echo "<p>TOTAL<br>";
+	echo "<pre>";
+	echo "<table border=1>";
+	echo "<tr><td><b>udate</b></td><td/><b>route</b></td><td/><b>stid</b></td><td/><b>stname</b></td><td/><b>ptnum</b></td><td/><b>pdnum</b></td><td/><b/>regd</b></td>";
+	while($row=mysql_fetch_object($res)){
+		echo "<tr>";
+		print("<td>$row->udate</td>");
+		print("<td>$row->route</td>");
+		print("<td>$row->stid</td>");
+		print("<td>$row->stname</td>");
+		print("<td>$row->ptnum</td>");
+		print("<td>$row->pdnum</td>");
+		print("<td>$row->regd</td>");
+		echo "</tr>";
+	}
+	echo "</table>";
+	echo "</pre>";
+?>
+</center>
+</body>
+</html>
